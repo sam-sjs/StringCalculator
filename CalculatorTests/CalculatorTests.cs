@@ -46,5 +46,19 @@ namespace CalculatorTests
             // Assert
             Assert.Equal(expectedOutput, output);
         }
+
+        [Fact]
+        public void Test_Can_Take_Varying_Length_Inputs()
+        {
+            // Arrange
+            string input = "3,5,3,9";
+            int expectedOutput = 20;
+            
+            // Act
+            int output = Calculator.Add(input);
+            
+            // Assert
+            Assert.Equal(expectedOutput, output);
+        }
     }
 }
