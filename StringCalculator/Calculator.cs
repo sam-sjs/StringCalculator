@@ -6,7 +6,8 @@ namespace StringCalculator
     {
         public static int Calculate(string toConvert)
         {
-            return 0;
+            if (toConvert == "") return 0; // This seems like a poor solution but works for now
+            return Int32.Parse(toConvert);
         }
     }
 }
