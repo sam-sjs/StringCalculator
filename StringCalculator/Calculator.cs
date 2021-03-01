@@ -1,22 +1,24 @@
 using System;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace StringCalculator
 {
     public static class Calculator
     {
-        public static int Add(string toConvert)
+        public static int Add(string stringToConvert)
         {
-            if (toConvert == "") return 0; // This seems like a poor solution but works for now
+            if (stringToConvert == "") return 0;
 
-            string[] stringsToInt = toConvert.Split(",");
-            int[] toSum = new int[stringsToInt.Length];
+            string[] stringsToInt = Regex.Split(stringToConvert, @"[\n,]+");
+            int[] numbers = new int[stringsToInt.Length];
+            
             for (int i = 0; i < stringsToInt.Length; i++)
             {
-                toSum[i] = Int32.Parse(stringsToInt[i]);
+                numbers[i] = Int32.Parse(stringsToInt[i]);
             }
 
-            return toSum.Sum();
+            return numbers.Sum();
         }
     }
 }
