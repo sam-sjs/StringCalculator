@@ -10,7 +10,7 @@ namespace CalculatorTests
         // Refactor to [THEORY]
         
         // Step One
-        public void Test_Output_Is_Number()
+        public void Output_Is_Number()
         {
             // Arrange
             string input = "";
@@ -24,7 +24,7 @@ namespace CalculatorTests
         
         // Step Two 
         [Fact]
-        public void Test_Output_Value_Is_Correct()
+        public void Output_Value_Is_Correct()
         {
             // Arrange
             string input = "5";
@@ -39,7 +39,7 @@ namespace CalculatorTests
         
         // Step Three
         [Fact]
-        public void Test_Can_Sum_Two_Numbers()
+        public void Can_Sum_Two_Numbers()
         {
             // Arrange
             string input = "3,5";
@@ -54,7 +54,7 @@ namespace CalculatorTests
 
         // Step Four
         [Fact]
-        public void Test_Can_Take_Varying_Length_Inputs()
+        public void Can_Take_Varying_Length_Inputs()
         {
             // Arrange
             string input = "3,5,3,9";
@@ -69,11 +69,26 @@ namespace CalculatorTests
         
         // Step Five
         [Fact]
-        public void Test_Can_Vary_Line_Breaks_And_Commas()
+        public void Can_Vary_Line_Breaks_And_Commas()
         {
             // Arrange
             string input = "3,4\n3,5";
             int expectedOutput = 15;
+            
+            // Act
+            int output = Calculator.Add(input);
+            
+            // Assert
+            Assert.Equal(expectedOutput, output);
+        }
+        
+        // Step Six
+        [Fact]
+        public void Can_Accept_Custom_Delimiter()
+        {
+            // Arrange
+            string input = "//;\n4;5";
+            int expectedOutput = 9;
             
             // Act
             int output = Calculator.Add(input);
