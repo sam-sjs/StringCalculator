@@ -124,5 +124,20 @@ namespace CalculatorTests
             // Assert
             Assert.Equal(expectedOutput, output);
         }
+        
+        // Step Nine
+        [Fact]
+        public void Can_Accept_Any_Length_Delimiter()
+        {
+            // Arrange
+            string input = "//[***]\n1***2***3";
+            int expectedOutput = 6;
+            
+            // Act
+            int output = Calculator.Add(input);
+            
+            // Assert
+            Assert.Equal(expectedOutput, output);
+        }
     }
 }
