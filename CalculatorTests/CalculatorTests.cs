@@ -109,5 +109,20 @@ namespace CalculatorTests
             var exception = Assert.Throws<ArgumentException>(() => Calculator.Add(input));
             Assert.Equal(message, exception.Message);
         }
+        
+        // Step Eight
+        [Fact]
+        public void Does_Not_Allow_Greater_Than_1000()
+        {
+            // Arrange
+            string input = "1000,1001,2";
+            int expectedOutput = 2;
+            
+            // Act
+            int output = Calculator.Add(input);
+            
+            // Assert
+            Assert.Equal(expectedOutput, output);
+        }
     }
 }

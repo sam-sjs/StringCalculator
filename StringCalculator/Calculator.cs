@@ -31,11 +31,11 @@ namespace StringCalculator
             for (int i = 0; i < stringsToInt.Length; i++)
             {
                 int currentNumber = Int32.Parse(stringsToInt[i]);
-                if (currentNumber >= 0)
+                if (currentNumber >= 0 && currentNumber < 1000)
                 {
                     posNumbers.Add(currentNumber);    
                 }
-                else
+                else if (currentNumber < 0)
                 {
                     negNumbers.Add(currentNumber);
                 }
