@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 
@@ -25,13 +26,27 @@ namespace StringCalculator
             }
     
             // Loop through array of strings and convert to int
-            int[] numbers = new int[stringsToInt.Length];
+            List<int> posNumbers = new List<int>();
+            List<int> negNumbers = new List<int>();
             for (int i = 0; i < stringsToInt.Length; i++)
             {
-                numbers[i] = Int32.Parse(stringsToInt[i]);
+                int currentNumber = Int32.Parse(stringsToInt[i]);
+                if (currentNumber >= 0)
+                {
+                    posNumbers.Add(currentNumber);    
+                }
+                else
+                {
+                    negNumbers.Add(currentNumber);
+                }
             }
 
-            return numbers.Sum();
+            if (negNumbers.Count > 0)
+            {
+                throw new ArgumentException($"Negatives not allowed: {string.Join(", ",negNumbers.ToArray())}");
+            }
+            
+            return posNumbers.Sum();
         }
     }
 }

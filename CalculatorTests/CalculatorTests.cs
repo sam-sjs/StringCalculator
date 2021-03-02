@@ -96,5 +96,18 @@ namespace CalculatorTests
             // Assert
             Assert.Equal(expectedOutput, output);
         }
+        
+        // Step Seven
+        [Fact]
+        public void Does_Not_Allow_Negative_Numbers()
+        {
+            // Arrange
+            string input = "-1,2,-3";
+            string message = "Negatives not allowed: -1, -3";
+            
+            // Act & Assert
+            var exception = Assert.Throws<ArgumentException>(() => Calculator.Add(input));
+            Assert.Equal(message, exception.Message);
+        }
     }
 }
