@@ -154,5 +154,40 @@ namespace CalculatorTests
             // Assert
             Assert.Equal(expectedOutput, output);
         }
+        
+        // Step Eleven
+        [Fact]
+        public void Multiple_Delimiters_Can_Have_Length_Greater_Than_One()
+        {
+            // Arrange
+            string input = "//[***][#][%]\n1***2#3%4";
+            int expectedOutput = 10;
+            
+            // Act
+            int output = Calculator.Add(input);
+            
+            // Assert
+            Assert.Equal(expectedOutput, output);
+        }
+        
+        // Step Twelve
+        [Fact]
+        public void Can_Handle_Delimiters_Containing_Numbers()
+        {
+            string input = "//[*1*][%]\n1*1*2%3";
+            int expectedOutput = 6;
+
+            int actual = Calculator.Add(input);
+
+            Assert.Equal(expectedOutput, actual);
+        }
+        
+        [Fact]
+        public void Numeric_Edge_Causes_Exception()
+        {
+            string input = "//[1**][%]\n1*1*2%3";
+
+            Assert.Throws<ArgumentException>(() => Calculator.Add(input));
+        }
     }
 }
