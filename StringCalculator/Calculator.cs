@@ -17,9 +17,11 @@ namespace StringCalculator
             if (Regex.Match(stringToConvert, @"(^\/\/\[).*?\]").Length > 0)
             {
                 // This can definitely be refactored with the below condition
-                string delimiter = Regex.Match(stringToConvert, @"(?<=\/\/\[)(.*)(?=\])").ToString();
+                string[] delimiters = Regex.Matches(stringToConvert, @"\[([^]]+)\]")
+                    .Select(m => m.Groups[1].Value)
+                    .ToArray();
                 string substringToConvert = Regex.Match(stringToConvert, @"(?<=\n).*").ToString();
-                stringsToInt = substringToConvert.Split(delimiter);
+                stringsToInt = substringToConvert.Split(delimiters, StringSplitOptions.RemoveEmptyEntries);
             }
             else if (stringToConvert.Contains("//"))
             {

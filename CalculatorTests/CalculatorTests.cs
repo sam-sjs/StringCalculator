@@ -139,5 +139,20 @@ namespace CalculatorTests
             // Assert
             Assert.Equal(expectedOutput, output);
         }
+        
+        // Step Ten
+        [Fact]
+        public void Can_Accept_Multiple_Delimiters()
+        {
+            // Arrange
+            string input = "//[*][%]\n1*2%3";
+            int expectedOutput = 6;
+            
+            // Act
+            int output = Calculator.Add(input);
+            
+            // Assert
+            Assert.Equal(expectedOutput, output);
+        }
     }
 }
