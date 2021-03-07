@@ -7,40 +7,46 @@ namespace StringCalculator
 {
     public static class Calculator
     {
-        public static int Add(string stringToConvert)
+        public static int Add(string stringToCalculate)
         {
-            // If string is empty return 0
-            if (stringToConvert == "") return 0;
+            if (stringToCalculate == "") return 0;
             
-            // If string contains "//" use delimiter that follows, else use "," & "\n"
-            string[] stringsToInt;
-            if (Regex.Match(stringToConvert, @"(^\/\/\[).*?\]").Length > 0)
+            string[] valuesToConvert = FindValues(stringToCalculate);
+
+            return StringsToInt(valuesToConvert).Sum();
+        }
+
+        private static string[] FindValues(string input)
+        {
+            string[] delimiter1 = Regex.Matches(input, @"\[([^]]+)\]")
+                .Select(m => m.Groups[1].Value)
+                .ToArray();
+            string[] delimiter2 = Regex.Matches(input, @"(?<=\/\/).")
+                .Select(m => m.Value)
+                .ToArray();
+            string delimiter3 = @"[\n,]+";
+            string substringToConvert = Regex.Match(input, @"(?<=\n).*").ToString();
+            
+            if (Regex.Match(input, @"(^\/\/\[).*?\]").Length > 0)
             {
-                // This can definitely be refactored with the below condition
-                string[] delimiters = Regex.Matches(stringToConvert, @"\[([^]]+)\]")
-                    .Select(m => m.Groups[1].Value)
-                    .ToArray();
-                string substringToConvert = Regex.Match(stringToConvert, @"(?<=\n).*").ToString();
-                stringsToInt = substringToConvert.Split(delimiters, StringSplitOptions.RemoveEmptyEntries);
+                return substringToConvert.Split(delimiter1, StringSplitOptions.RemoveEmptyEntries);
             }
-            else if (stringToConvert.Contains("//"))
+            
+            if (input.Contains("//"))
             {
-                string delimiter = Regex.Match(stringToConvert, @"(?<=\/\/).").ToString();
-                string substringToConvert = Regex.Match(stringToConvert, @"(?<=\n).*").ToString();
-                stringsToInt = substringToConvert.Split(delimiter);
+                return substringToConvert.Split(delimiter2, StringSplitOptions.RemoveEmptyEntries);
             }
-            else
-            {
-                stringsToInt = Regex.Split(stringToConvert, @"[\n,]+");
-            }
-    
-            // Loop through array of strings and convert to int
+            
+            return Regex.Split(input, delimiter3);
+        }
+
+        private static List<int> StringsToInt(string[] valuesToConvert)
+        {
             List<int> posNumbers = new List<int>();
             List<int> negNumbers = new List<int>();
-            for (int i = 0; i < stringsToInt.Length; i++)
+            foreach (string value in valuesToConvert)
             {
-                // Only sum positive numbers less than 1000
-                int currentNumber = Int32.Parse(stringsToInt[i]);
+                int currentNumber = Int32.Parse(value);
                 if (currentNumber >= 0 && currentNumber < 1000)
                 {
                     posNumbers.Add(currentNumber);    
@@ -55,8 +61,33 @@ namespace StringCalculator
             {
                 throw new ArgumentException($"Negatives not allowed: {string.Join(", ",negNumbers.ToArray())}");
             }
-            
-            return posNumbers.Sum();
+
+            return posNumbers;
         }
     }
 }
+
+//;\n1;2
+//[***]\n1***2***3
+//[*][%]\n1*2%3
+//[***][#][%]\n1***2#3%4
+
+
+// (?(?<=\/\/)(.))
+//     \[(.*?)\]|\/\/(.*?)\\n
+//     \/\/(.*?)\\n
+//     
+//     (?(?=\/\/\[.*)\/\/\[(.*?)\]|\/\/.*\\n)
+
+// This might work - Group 1 & 2
+// \[([^]]+)\]|(?(?=\/\/.\\n)\/\/(.))
+
+// (?(?=\/\/\[)\[([^]]+)\]|(?<=\/\/).)
+// \[([^\d][^]][^\d]+?)\]
+
+// Closest so far
+// \[(\D+?[^]]*\D?)\]
+
+// \[(?(?=\D+)([^]]*\D))\]  -- seems like it should be working
+
+// \[(?(?=\D+)([^]]*\D))\]
