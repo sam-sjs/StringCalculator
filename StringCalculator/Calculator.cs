@@ -11,33 +11,31 @@ namespace StringCalculator
         {
             if (stringToCalculate == "") return 0;
             
-            string[] valuesToConvert = FindValues(stringToCalculate);
+            string[] valuesToSum = FindValues(stringToCalculate);
 
-            return StringsToInt(valuesToConvert).Sum();
+            return StringsToInt(valuesToSum).Sum();
         }
 
         private static string[] FindValues(string input)
         {
-            string[] delimiter1 = Regex.Matches(input, @"\[([^]]+)\]")
-                .Select(m => m.Groups[1].Value)
-                .ToArray();
-            string[] delimiter2 = Regex.Matches(input, @"(?<=\/\/).")
-                .Select(m => m.Value)
-                .ToArray();
-            string delimiter3 = @"[\n,]+";
-            string substringToConvert = Regex.Match(input, @"(?<=\n).*").ToString();
-            
-            if (Regex.Match(input, @"(^\/\/\[).*?\]").Length > 0)
+            string delimiterPattern = @"(?<=\[)(?(?=\D+)[^]]*\D)(?=\])|(?<=\/\/).";
+            string exceptionPattern = @"(?<=\[)(?:\d[^]]*|[^]]*\d)(?=\])";
+            string standardDelimiters = @"[\n,]+";
+            string[] customDelimiters = Regex.Matches(input, delimiterPattern).Select(m => m.Value).ToArray();
+            var exceptionDelimiters = Regex.Matches(input, exceptionPattern);
+            string substringToSum = Regex.Match(input, @"(?<=\n).*").ToString();
+
+            if (exceptionDelimiters.Count > 0)
             {
-                return substringToConvert.Split(delimiter1, StringSplitOptions.RemoveEmptyEntries);
+                throw new ArgumentException("Delimiters cannot start or end with numbers");
             }
-            
+
             if (input.Contains("//"))
             {
-                return substringToConvert.Split(delimiter2, StringSplitOptions.RemoveEmptyEntries);
+                return substringToSum.Split(customDelimiters, StringSplitOptions.RemoveEmptyEntries);
             }
-            
-            return Regex.Split(input, delimiter3);
+
+            return Regex.Split(input, standardDelimiters);
         }
 
         private static List<int> StringsToInt(string[] valuesToConvert)
@@ -66,28 +64,3 @@ namespace StringCalculator
         }
     }
 }
-
-//;\n1;2
-//[***]\n1***2***3
-//[*][%]\n1*2%3
-//[***][#][%]\n1***2#3%4
-
-
-// (?(?<=\/\/)(.))
-//     \[(.*?)\]|\/\/(.*?)\\n
-//     \/\/(.*?)\\n
-//     
-//     (?(?=\/\/\[.*)\/\/\[(.*?)\]|\/\/.*\\n)
-
-// This might work - Group 1 & 2
-// \[([^]]+)\]|(?(?=\/\/.\\n)\/\/(.))
-
-// (?(?=\/\/\[)\[([^]]+)\]|(?<=\/\/).)
-// \[([^\d][^]][^\d]+?)\]
-
-// Closest so far
-// \[(\D+?[^]]*\D?)\]
-
-// \[(?(?=\D+)([^]]*\D))\]  -- seems like it should be working
-
-// \[(?(?=\D+)([^]]*\D))\]
